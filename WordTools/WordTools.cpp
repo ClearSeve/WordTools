@@ -125,6 +125,7 @@ HRESULT STDMETHODCALLTYPE CWordTools::GetBandInfo(DWORD dwBandID, DWORD dwViewMo
 		{
 			pdbi->ptMinSize.x = 200;
 			pdbi->ptMinSize.y = 30;
+			//pdbi->ptMinSize = m_wndContentWindow.CalcIdealSize();
 		}
 
 		if (pdbi->dwMask & DBIM_MAXSIZE)
@@ -141,6 +142,7 @@ HRESULT STDMETHODCALLTYPE CWordTools::GetBandInfo(DWORD dwBandID, DWORD dwViewMo
 		{
 			pdbi->ptActual.x = 200;
 			pdbi->ptActual.y = 30;
+			//pdbi->ptActual = m_wndContentWindow.CalcIdealSize();
 		}
 
 		if (pdbi->dwMask & DBIM_TITLE)
