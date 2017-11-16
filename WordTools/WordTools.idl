@@ -1,0 +1,32 @@
+// WordTools.idl : WordTools 的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(WordTools.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(08D07FD1-3B9B-468C-9561-5E3E2FEA6FB5),
+	pointer_default(unique)
+]
+interface IWordTools : IUnknown{
+};
+[
+	uuid(70BE50BB-B697-4F0F-B155-E77E99525951),
+	version(1.0),
+]
+library WordToolsLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(EE8EE4AB-3524-46B5-8CED-E5E56A4FAFD5)		
+	]
+	coclass WordTools
+	{
+		[default] interface IWordTools;
+	};
+};
+
