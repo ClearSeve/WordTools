@@ -353,7 +353,6 @@ HRESULT CWordTools::IPersistStreamInit_Load(LPSTREAM pStm,const ATL_PROPMAP_ENTR
 HRESULT CWordTools::IPersistStreamInit_Save(LPSTREAM pStm,BOOL fClearDirty,const ATL_PROPMAP_ENTRY* pMap)
 {
 	
-
 	pStm->Write(&m_DataSettingDialog, sizeof(m_DataSettingDialog), NULL);
 
 	return __super::IPersistStreamInit_Save(pStm, fClearDirty, pMap);
