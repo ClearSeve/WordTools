@@ -26,7 +26,8 @@ public:
 private:
 	VOID GetSystemColor();
 	VOID GetSystemFont();
-
+	int m_nWidth;
+		int m_nHeight;
 private:
 	DWORD m_nNumber;
 	HFONT m_hSystemFont;

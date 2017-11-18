@@ -5,7 +5,7 @@
 #include "resource.h"
 #include "WordTools_i.h"
 #include "dllmain.h"
-
+#include "CSettingDialog.h"
 
 using namespace ATL;
 
@@ -271,4 +271,90 @@ HRESULT STDMETHODCALLTYPE CWordTools::ContextSensitiveHelp(
 	ATLTRACE(atlTraceCOM, 2, _T("IOleWindow::ContextSensitiveHelp\n"));
 
 	ATLTRACENOTIMPL("IOleWindow::ContextSensitiveHelp");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// IContextMenu
+const UINT IDM_SEPARATOR_OFFSET = 0;
+const UINT IDM_SETTINGS_OFFSET = 1;
+
+HRESULT STDMETHODCALLTYPE CWordTools::QueryContextMenu(
+	/* [in] */ HMENU hMenu,
+	/* [in] */ UINT indexMenu,
+	/* [in] */ UINT idCmdFirst,
+	/* [in] */ UINT /*idCmdLast*/,
+	/* [in] */ UINT uFlags)
+{
+	ATLTRACE(atlTraceCOM, 2, _T("IContextMenu::QueryContextMenu\n"));
+
+	if (CMF_DEFAULTONLY & uFlags)
+		return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 0);
+
+	// Add a seperator
+	::InsertMenu(hMenu,indexMenu,MF_SEPARATOR | MF_BYPOSITION,idCmdFirst + IDM_SEPARATOR_OFFSET, 0);
+
+	// Add the new menu item
+	CString sCaption = _T("ÉèÖÃ");
+
+	::InsertMenu(hMenu,indexMenu,MF_STRING | MF_BYPOSITION,idCmdFirst + IDM_SETTINGS_OFFSET,sCaption);
+
+	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_SETTINGS_OFFSET + 1);
+}
+
+HRESULT STDMETHODCALLTYPE CWordTools::InvokeCommand(
+	/* [in] */ LPCMINVOKECOMMANDINFO pici)
+{
+	ATLTRACE(atlTraceCOM, 2, _T("IContextMenu::InvokeCommand\n"));
+
+	if (!pici) return E_INVALIDARG;
+
+	if (LOWORD(pici->lpVerb) == IDM_SETTINGS_OFFSET)
+	{
+		ATLASSERT(m_wndCalendar.IsWindow());
+		CCSettingDialog SettingDialog(&m_DataSettingDialog);
+		const INT_PTR res = SettingDialog.DoModal(m_wndContentWindow);
+
+		if (res == IDOK)
+		{
+			/*m_dateFormat = dlgSettings.m_dateFormat;
+			m_bRequiresSave = true;
+
+			const HRESULT hr = UpdateDeskband();
+			ATLASSERT(SUCCEEDED(hr));*/
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CWordTools::GetCommandString(
+	/* [in] */ UINT_PTR /*idCmd*/,
+	/* [in] */ UINT /*uType*/,
+	/* [in] */ UINT* /*pReserved*/,
+	/* [out] */ LPSTR /*pszName*/,
+	/* [in] */ UINT /*cchMax*/)
+{
+	ATLTRACE(atlTraceCOM, 2, _T("IContextMenu::GetCommandString\n"));
+
+	return S_OK;
+}
+
+
+
+HRESULT CWordTools::IPersistStreamInit_Load(LPSTREAM pStm,const ATL_PROPMAP_ENTRY* pMap)
+{
+	const HRESULT hr = __super::IPersistStreamInit_Load(pStm, pMap);
+
+	pStm->Read(&m_DataSettingDialog, sizeof(m_DataSettingDialog), NULL);
+
+	return hr;
+}
+
+HRESULT CWordTools::IPersistStreamInit_Save(LPSTREAM pStm,BOOL fClearDirty,const ATL_PROPMAP_ENTRY* pMap)
+{
+	
+
+	pStm->Write(&m_DataSettingDialog, sizeof(m_DataSettingDialog), NULL);
+
+	return __super::IPersistStreamInit_Save(pStm, fClearDirty, pMap);
 }

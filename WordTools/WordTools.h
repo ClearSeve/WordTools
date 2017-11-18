@@ -26,7 +26,8 @@ class ATL_NO_VTABLE CWordTools :
 	public CComCoClass<CWordTools, &CLSID_WordTools>,
 	public IObjectWithSiteImpl<CWordTools>,
 	public IDeskBand2,
-	public IPersistStreamInitImpl<CWordTools>
+	public IPersistStreamInitImpl<CWordTools>,
+	public IContextMenu
 	
 {
 	typedef IPersistStreamInitImpl<CWordTools> IPersistStreamImpl;
@@ -40,6 +41,7 @@ DECLARE_REGISTRY_RESOURCEID(IDR_WORDTOOLS1)
 DECLARE_NOT_AGGREGATABLE(CWordTools)
 
 BEGIN_COM_MAP(CWordTools)
+	COM_INTERFACE_ENTRY(IContextMenu)
 	COM_INTERFACE_ENTRY(IObjectWithSite)
 	COM_INTERFACE_ENTRY(IOleWindow)
 	COM_INTERFACE_ENTRY(IDockingWindow)
@@ -55,6 +57,7 @@ BEGIN_CATEGORY_MAP(CWordTools)
 END_CATEGORY_MAP()
 
 BEGIN_PROP_MAP(CWordTools)
+	PROP_DATA_ENTRY("TestData", m_DataSettingDialog.nData, VT_UI4)
 END_PROP_MAP()
 
 
@@ -95,12 +98,32 @@ public:
 	STDMETHOD(GetWindow)(HWND *phwnd);
 	STDMETHOD(ContextSensitiveHelp)(BOOL fEnterMode);
 
+	// IContextMenu
+	//
+	STDMETHOD(QueryContextMenu)(HMENU hmenu,UINT indexMenu,UINT idCmdFirst,UINT idCmdLast,UINT uFlags);
+	STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO *pici);
+	STDMETHOD(GetCommandString)(UINT_PTR idCmd,UINT uType,UINT *pReserved,LPSTR pszName,UINT cchMax);
+
+
+	// IPersistStreamImpl
+	//
+	HRESULT IPersistStreamInit_Load(
+		/* [in] */ LPSTREAM pStm,
+		/* [in] */ const ATL_PROPMAP_ENTRY* pMap);
+
+	HRESULT IPersistStreamInit_Save(
+		/* [in] */ LPSTREAM pStm,
+		/* [in] */ BOOL fClearDirty,
+		/* [in] */ const ATL_PROPMAP_ENTRY* pMap);
+
+
 
 	CContentWindow m_wndContentWindow;
 
 	DWORD m_dwBandID;
 	DWORD m_dwViewMode;
 	BOOL m_bCompositionEnabled;
+	DATASETTINGDIALOG m_DataSettingDialog;
 
 public:
 	bool m_bRequiresSave; // used by IPersistStreamInitImpl

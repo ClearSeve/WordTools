@@ -34,6 +34,9 @@
     <ClCompile Include="ContentWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CSettingDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -55,6 +58,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="WordTools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CSettingDialog.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
